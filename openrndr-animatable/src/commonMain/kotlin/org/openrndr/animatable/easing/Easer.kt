@@ -20,7 +20,8 @@ enum class Easing(val easer: Easer) {
     QuadInOut(QuadInOut()),
     QuartIn(QuartIn()),
     QuartOut(QuartOut()),
-    QuartInOut(QuartInOut())
+    QuartInOut(QuartInOut()),
+    BackInOut(BackInOut())
 }
 
 class Linear : Easer {
@@ -178,5 +179,25 @@ class QuartInOut : Easer {
         val td2 = td - 2.0
 
         return if (td < 1) c / 2 * td * td * td * td + b else -c / 2 * (td2 * td2 * td2 * td2 - 2) + b
+    }
+}
+
+fun getBackInOut( amount:Double, t:Double):Double {
+    val a = amount * 1.525
+    return if((t*2) < 1){
+        0.5 * (t * t * ((a + 1 ) * t - a))
+    } 
+    else {
+        0.5 * ((t - 2) * t * ((a+1) * t + a) +2)
+    }
+}
+class BackInOut: Easer {
+    override fun velocity(t: Double, b:Double, c:Double, d:Double): Double {
+        return c/d
+    }
+    override fun ease(t:Double, b:Double, c: Double, d: Double): Double {
+        val td = t / d
+        val p = getBackInOut(1.7, td)
+        return b + c * p
     }
 }
